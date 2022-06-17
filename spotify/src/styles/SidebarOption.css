@@ -1,0 +1,39 @@
+.sidebarOption {
+  display: flex;
+  align-items: center;
+  color: gray;
+  height: 40px;
+  cursor: pointer;
+  transition: 200ms color ease-in;
+  border-radius: 5px;
+  font-family: "Helvetica Neue", helvetica, arial, "Hiragino Kaku Gothic Pro",
+    Meiryo, "MS Gothic", sans-serif;
+  text-decoration: none;
+}
+.sidebarOption:hover {
+  color: white;
+}
+.playlist-title:hover {
+  color: white;
+}
+.sidebarOption__icon {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.playlist-title {
+  margin-top: 10px;
+  margin-left: 20px;
+  font-size: 14px;
+  color: gray;
+}
+.sidebarOption > h4 {
+  /* margin-top: 10px;
+  margin-left: 20px; */
+  font-size: 14px;
+  font-weight: 700;
+}
+.playlist {
+}
+.playlist-active .playlist-title {
+  color: white !important;
+}

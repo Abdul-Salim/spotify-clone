@@ -1,0 +1,137 @@
+.header {
+  display: flex;
+  /* flex: 0.95; */
+  background-color: transparent;
+  /* justify-content: space-between; */
+  width: 85%;
+  height: 60px;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  /* transition-timing-function: ease-in;
+  transition: all 0.5s; */
+  z-index: 1000;
+  right: 0;
+}
+.header__left {
+  position: relative;
+  margin-left: 100px;
+}
+.header__left > svg {
+  position: absolute;
+  top: 7px;
+  left: 10px;
+  z-index: 100;
+  color: #808080 !important;
+}
+
+.header__left > input {
+  width: 100%;
+  flex: 0.4;
+  background-color: white;
+  color: rgb(90, 90, 90);
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  padding: 10px 48px;
+  border: none;
+  outline: none;
+  position: relative;
+  padding-left: 40px;
+  height: 18px;
+}
+.grey {
+  background-color: #040404;
+}
+.profile {
+  color: white;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  background-color: #000000;
+  border-radius: 20px;
+  height: 28px;
+  margin-right: 50px;
+  cursor: pointer;
+}
+.profile:hover {
+  background-color: rgb(44, 44, 44);
+}
+.profile > .MuiAvatar-root {
+  height: 28px !important;
+  width: 28px !important;
+}
+.profile > h4 {
+  padding-left: 5px;
+}
+.profile > button {
+  display: flex;
+  background-color: transparent;
+  color: white;
+  border: none;
+  padding: 0;
+  padding-left: 5px;
+}
+.profile-menu {
+  width: 191px;
+  position: absolute;
+  right: 50px;
+  top: 55px;
+  background: #282828;
+  color: #ffffff;
+  padding: 5px 10px;
+  z-index: 2000;
+}
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: transparent;
+}
+.menu-item:hover {
+  background-color: #363636;
+}
+.menu-item > p {
+  font-size: 14px;
+  font-weight: 400;
+  font-family: "Helvetica Neue", helvetica, arial, "Hiragino Kaku Gothic Pro";
+}
+.back-icon {
+  background-color: #050505;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0px 10px;
+  position: relative;
+}
+.back-icon > svg {
+  fill: #fff;
+  font-size: 1rem;
+  position: absolute;
+  top: 7px;
+  left: 9px;
+}
+.front-icon {
+  background-color: #050505;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0px 10px;
+  position: relative;
+}
+.front-icon > svg {
+  fill: #fff;
+  font-size: 1rem;
+  position: absolute;
+  top: 7px;
+  left: 8px;
+}
+.front-icon > svg:disabled {
+  fill: #676767;
+}
