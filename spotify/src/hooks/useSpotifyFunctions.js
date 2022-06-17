@@ -1,12 +1,12 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import spotifyApi from "../spotify";
 import { useDataLayerValue } from "../context/DataLayer";
 
 const useSpotifyFucntions = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [, dispatch] = useDataLayerValue();
 
   const accessToken = localStorage.getItem("accessToken");
@@ -14,7 +14,7 @@ const useSpotifyFucntions = () => {
   const expiresIn = localStorage.getItem("expiresIn");
   if (refreshToken === null || !refreshToken) {
     console.log("fjfjfjfj");
-    history.push("/auth");
+    navigate("/auth");
   } else if (
     new Date().getTime() >= expiresIn ||
     isNaN(expiresIn) ||
@@ -22,7 +22,7 @@ const useSpotifyFucntions = () => {
   ) {
     console.log(expiresIn, accessToken, refreshToken);
     axios
-      .post("http://localhost:3001/refresh", {
+      .post("http://localhost:4000/refresh", {
         refreshToken,
       })
       .then((res) => {

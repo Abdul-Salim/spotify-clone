@@ -1,23 +1,23 @@
+import { Navigate, useRoutes } from "react-router-dom";
 import Login from "../components/Login";
 import GetToken from "../components/GetToken";
 
-const authRoutes = [
-  {
-    path: "/auth/get-token",
-    component: GetToken,
-    key: "get-token",
-  },
-  {
-    path: "/auth/login",
-    component: Login,
-    key: "login",
-  },
-  {
-    redirect: true,
-    path: "/auth",
-    to: "/auth/login",
-    key: "redirect",
-  },
-];
+const AuthRoutes = () => {
+  let authRoutes = useRoutes([
+    {
+      path: "get-token",
+      element: <GetToken />,
+    },
+    {
+      path: "login",
+      element: <Login />,
+    },
+    {
+      path: "",
+      element: <Navigate to="../login" />,
+    },
+  ]);
+  return authRoutes;
+};
 
-export default authRoutes;
+export default AuthRoutes;

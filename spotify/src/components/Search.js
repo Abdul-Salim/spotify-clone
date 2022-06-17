@@ -8,7 +8,7 @@ import TrackSearchResult from "./TrackSearchResult";
 import { useDataLayerValue } from "../context/DataLayer";
 
 import "../styles/Search.css";
-import { useHistory, Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import spotifyApi from "../spotify";
 
 import CircularProgress from "@mui/material/CircularProgress";
@@ -44,7 +44,7 @@ const Header = () => {
   const [loading, setLoading] = useState(false);
   // const [show, handleShow] = useState(false);
 
-  const history = useHistory();
+  const navigate = useNavigate();
   var div = document.getElementById("myDiv");
 
   useEffect(() => {

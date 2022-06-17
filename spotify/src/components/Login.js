@@ -1,13 +1,12 @@
 import React, { useEffect } from "react";
-import { useHistory } from "react-router-dom";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 import "../styles/Login.css";
 import { loginUrl } from "../spotify";
 import { useDataLayerValue } from "../context/DataLayer";
 
 function Login() {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [{}, dispatch] = useDataLayerValue();
   const accessToken = localStorage.getItem("accessToken");
   const expiresIn = localStorage.getItem("expiresIn");

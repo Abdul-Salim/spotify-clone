@@ -1,26 +1,13 @@
 import React, { useEffect } from "react";
-import { Route, Redirect, Switch, useHistory } from "react-router-dom";
+import { Route, Redirect, useNavigate,  } from "react-router-dom";
 import axios from "axios";
 
-import authRoutes from "../../routes/auth";
 import { useDataLayerValue } from "../../context/DataLayer";
 import spotifyApi from "../../spotify";
-
-const renderComponents = (
-  <Switch>
-    {authRoutes.map((prop) => {
-      if (prop.redirect) {
-        return <Redirect from={prop.from} to={prop.to} key={prop.key} />;
-      }
-      return (
-        <Route path={prop.path} component={prop.component} key={prop.key} />
-      );
-    })}
-  </Switch>
-);
+import AuthRoutes from "../../routes/auth";
 
 function AuthLayout() {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [{}, dispatch] = useDataLayerValue();
   const accessToken = localStorage.getItem("accessToken");
   const expiresIn = localStorage.getItem("expiresIn");
@@ -39,12 +26,12 @@ function AuthLayout() {
         type: "SET_TOKEN",
         accessToken: accessToken,
       });
-      history.push("/home");
+      navigate("/home");
     } else {
       if (refreshToken) {
         if (new Date().getTime() >= expiresIn) {
           axios
-            .post("http://localhost:3001/refresh", {
+            .post("http://localhost:4000/refresh", {
               refreshToken,
             })
             .then((res) => {
@@ -59,7 +46,7 @@ function AuthLayout() {
                 accessToken: res?.data?.accessToken,
               });
               spotifyApi.setAccessToken(accessToken);
-              history.push("/home");
+              navigate("/home");
             })
             .catch(() => {
               window.location = "/";
@@ -67,8 +54,8 @@ function AuthLayout() {
         }
       }
     }
-  }, [accessToken, dispatch, expiresIn, history, refreshToken]);
-  return <>{renderComponents}</>;
+  }, [accessToken, dispatch, expiresIn, refreshToken]);
+  return <><AuthRoutes /></>;
 }
 
 export default AuthLayout;

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Route, Redirect, Switch, useHistory } from "react-router-dom";
+import { Route, Redirect, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import Footer from "../Footer";
 import Sidebar from "../Sidebar";
 import Header from "../Header";
-import portalRoutes from "../../routes/portal";
 import { useDataLayerValue } from "../../context/DataLayer";
 import spotifyApi from "../../spotify";
 import { getTokenFromUrl } from "../../spotify";
+import PortalRoutes from "../../routes/portal";
 
 // export const spotify = new SpotifyWebApi();
 
@@ -42,26 +42,26 @@ class ErrorBoundary extends React.Component {
     return children;
   }
 }
-const renderComponents = (
-  <Switch>
-    {portalRoutes.map((prop) => {
-      if (prop.redirect) {
-        return <Redirect from={prop.path} to={prop.to} key={prop.key} />;
-      }
-      return (
-        <Route
-          path={prop.path}
-          exact={prop.exact}
-          component={prop.component}
-          key={prop.key}
-        />
-      );
-    })}
-  </Switch>
-);
+// const renderComponents = (
+//   <>
+//     {portalRoutes.map((prop) => {
+//       if (prop.redirect) {
+//         return <Redirect from={prop.path} to={prop.to} key={prop.key} />;
+//       }
+//       return (
+//         <Route
+//           path={prop.path}
+//           exact={prop.exact}
+//           component={prop.component}
+//           key={prop.key}
+//         />
+//       );
+//     })}
+//     </>
+// );
 
 const Portal = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [, dispatch] = useDataLayerValue();
   const accessToken = localStorage.getItem("accessToken");
   const expiresIn = localStorage.getItem("expiresIn");
@@ -72,7 +72,7 @@ const Portal = () => {
   useEffect(() => {
     if (!refreshToken || refreshToken === null) {
       axios
-        .post("http://localhost:3001/login", {
+        .post("http://localhost:4000/login", {
           code,
         })
         .then((res) => {
@@ -138,7 +138,7 @@ const Portal = () => {
   //             .catch((err) => {
   //               console.log("err", err);
   //             });
-  //           history.push("/home");
+  //           navigate("/home");
   //         })
   //         .catch(() => {
   //           window.location = "/";
@@ -184,13 +184,13 @@ const Portal = () => {
   //         });
   //     }
   //   } else {
-  //     history.push("/auth");
+  //     navigate("/auth");
   //   }
   // }, [accessToken, dispatch, expiresIn, history, refreshToken]);
 
   // useEffect(() => {
   //   const interval = setInterval(() => {
-  //     if (!refreshToken) history.push("/auth");
+  //     if (!refreshToken) navigate("/auth");
   //     if (
   //       new Date().getTime() >= expiresIn ||
   //       isNaN(expiresIn || accessToken === "undefined")
@@ -245,7 +245,7 @@ const Portal = () => {
         <div className="player__body">
           <Sidebar />
           <Header />
-          {renderComponents}
+          <PortalRoutes />
         </div>
         <Footer spotify={spotifyApi} />
       </ErrorBoundary>

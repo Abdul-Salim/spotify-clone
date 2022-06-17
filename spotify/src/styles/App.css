@@ -1,3 +1,7 @@
 .mx {
   margin-right: 13px;
 }
+.PlayerRSWP div p {
+  color: white !important;
+  border: none !important;
+}
