@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDataLayerValue } from "../context/DataLayer";
 import spotifyApi from "../spotify";
 import CircularProgress from "@mui/material/CircularProgress";
 
 const GetToken = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [, dispatch] = useDataLayerValue();
   const [loading, setLoading] = useState(false);
   const code = new URLSearchParams(window.location.search).get("code");
@@ -15,7 +15,7 @@ const GetToken = () => {
     setLoading(true);
     const timeout = setTimeout(() => {
       axios
-        .post("http://localhost:3001/login", {
+        .post("http://localhost:4000/login", {
           code,
         })
         .then((res) => {
@@ -30,7 +30,7 @@ const GetToken = () => {
           });
           spotifyApi.setAccessToken(res?.data?.accessToken);
           setLoading(false);
-          history.push("/home");
+          navigate("/home");
         })
         .catch(() => {
           setLoading(false);
@@ -40,7 +40,7 @@ const GetToken = () => {
     return () => {
       clearTimeout(timeout);
     };
-  }, [code, dispatch, history]);
+  }, [code, dispatch]);
 
   // useEffect(() => {
   //   if (accessToken) {
@@ -49,7 +49,7 @@ const GetToken = () => {
   //       type: "SET_TOKEN",
   //       accessToken: accessToken,
   //     });
-  //     history.push("/home");
+  //     navigate("/home");
   //   }
   // }, [accessToken, dispatch, history]);
 

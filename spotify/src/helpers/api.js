@@ -20,7 +20,7 @@ export const getAccessToken = () => {
     refresh
   ) {
     axios
-      .post("http://localhost:3001/refresh", {
+      .post("http://localhost:4000/refresh", {
         refresh,
       })
       .then((res) => {
@@ -35,7 +35,7 @@ export const getAccessToken = () => {
   } else {
     if (isNaN(expires) || token === "undefined") {
       axios
-        .post("http://localhost:3001/refresh", {
+        .post("http://localhost:4000/refresh", {
           refresh,
         })
         .then((res) => {
@@ -45,7 +45,7 @@ export const getAccessToken = () => {
           localStorage.setItem("expiresIn", expires);
           return res?.data?.accessToken;
 
-          // history.push("/home");
+          // navigate("/home");
         })
         .catch(() => {
           window.location = "/auth";

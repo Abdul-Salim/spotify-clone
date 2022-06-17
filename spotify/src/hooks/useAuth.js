@@ -61,7 +61,7 @@ const useAuth = () => {
     isNaN(expires || accessToken === "undefined")
   ) {
     axios
-      .post("http://localhost:3001/refresh", {
+      .post("http://localhost:4000/refresh", {
         refresh,
       })
       .then((res) => {
@@ -75,7 +75,7 @@ const useAuth = () => {
   } else {
     if (isNaN(expires) || accessToken === "undefined") {
       axios
-        .post("http://localhost:3001/refresh", {
+        .post("http://localhost:4000/refresh", {
           refresh,
         })
         .then((res) => {
@@ -83,7 +83,7 @@ const useAuth = () => {
           localStorage.setItem("accessToken", res?.data?.accessToken);
           const expires = new Date().getTime() + res?.data?.expiresIn * 1000;
           localStorage.setItem("expiresIn", expires);
-          // history.push("/home");
+          // navigate("/home");
         })
         .catch(() => {
           window.location = "/";

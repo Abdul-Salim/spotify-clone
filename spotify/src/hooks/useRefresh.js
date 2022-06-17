@@ -12,7 +12,7 @@ export default function useAuth() {
   const getAccessToken = () => {
     if (!refreshToken) return;
     axios
-      .post("http://localhost:3001/refresh", {
+      .post("http://localhost:4000/refresh", {
         refreshToken,
       })
       .then((res) => {

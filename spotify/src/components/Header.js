@@ -11,13 +11,13 @@ import { useDataLayerValue } from "../context/DataLayer";
 import "../styles/Header.css";
 import spotifyApi from "../spotify";
 import { getMe } from "../services/spotifyFunctions";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 const Header = () => {
   const [{ user, isBlack, search }, dispatch] = useDataLayerValue();
   const [isOpen, setIsOpen] = useState(false);
   const [show, handleShow] = useState(false);
   const accessToken = localStorage.getItem("accessToken");
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const goBack = () => {
     history.goBack();

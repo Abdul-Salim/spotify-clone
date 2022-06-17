@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 
 import Body from "./Body";
 import { useDataLayerValue } from "../context/DataLayer";
 
 import "../styles/Player.css";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import spotifyApi from "../spotify";
 import { getTokenFromUrl } from "../spotify";
 import useSpotifyFunctions from "../hooks/useSpotifyFunctions";
