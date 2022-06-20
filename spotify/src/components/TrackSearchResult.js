@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useRecoilState } from "recoil";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 
-import { useDataLayerValue } from "../context/DataLayer";
-import spotifyApi from "../spotify";
+import { playerState } from "../recoil/atoms/playerStateAtom";
 
 export default function TrackSearchResult({ track, chooseTrack, index }) {
   const [show, setShow] = useState();
-  const [{ playing, playingTrack }, dispatch] = useDataLayerValue();
-
+  const [playerStateVal, setPlayerState] = useRecoilState(playerState);
   function handlePlay() {
     console.log(track);
     chooseTrack(track);
@@ -16,8 +15,8 @@ export default function TrackSearchResult({ track, chooseTrack, index }) {
 
   const showPlayorPause = (id) => {
     if (show === id) {
-      if (playingTrack?.id === id) {
-        if (playing) return <PauseIcon />;
+      if (playerStateVal?.playingTrack?.id === id) {
+        if (playerStateVal?.playing) return <PauseIcon />;
         else
           return (
             <PlayArrowIcon sx={{ padding: 0, margin: 0, fontSize: "12px" }} />
@@ -60,7 +59,8 @@ export default function TrackSearchResult({ track, chooseTrack, index }) {
     >
       <p className="mx">
         {show === track?.id ? (
-          playingTrack === track && playing === true ? (
+          playerStateVal?.playingTrack === track &&
+          playerStateVal?.playing === true ? (
             <PauseIcon />
           ) : (
             <PlayArrowIcon className="song-play" />

@@ -1,13 +1,12 @@
 .search {
   flex: 0.96;
-  height: 30vh;
+  height: 91vh;
   background: #121212;
   color: white;
   justify-content: center;
   padding: 20px;
   overflow-y: scroll;
   padding-bottom: 400px;
-  padding-top: 60px;
 }
 .search-top {
   display: flex;
@@ -69,20 +68,20 @@
 }
 
 .artist-card {
-  height: 230px;
-  width: 145px;
   display: flex;
   flex-direction: column;
   background-color: #181818;
   margin: 10px 10px;
   justify-content: space-around;
-  padding: 10px 20px;
+  align-items: center;
+  padding: 16px;
   cursor: pointer;
+  height: 235px;
 }
 .card-inner {
   position: relative;
-  height: 140px;
-  width: 140px;
+  height: 157px;
+  width: 157px;
 }
 .card-inner > .spotify-play {
   position: absolute;
@@ -111,7 +110,8 @@
   margin-left: 15px;
 }
 .card-outer {
-  width: 140px;
+  width: 157px;
+  height: 62px;
   display: flex;
   flex-direction: column;
 }
@@ -132,8 +132,8 @@
   font-weight: 700;
 }
 .playlist-image {
-  width: 140px;
-  height: 150px;
+  width: 157px;
+  height: 157px;
 }
 .categories-head {
   padding-left: 20px;
@@ -174,7 +174,7 @@
   font-weight: 700;
   color: #ffffff;
   padding-left: 15px;
-  padding-top: 15px;
+  padding-top: 5px;
   overflow: hidden;
   text-overflow: ellipsis;
 }

@@ -51,8 +51,7 @@ import { useState } from "react";
 // }
 
 const useAuth = () => {
-  const [accessToken, setAccessToken] = useState();
-  const token = localStorage.getItem("accessToken");
+  const [accessToken] = useState();
   const refresh = localStorage.getItem("refreshToken");
   const expires = localStorage.getItem("expiresIn");
   if (!refresh) return;
@@ -79,7 +78,6 @@ const useAuth = () => {
           refresh,
         })
         .then((res) => {
-          console.log(res);
           localStorage.setItem("accessToken", res?.data?.accessToken);
           const expires = new Date().getTime() + res?.data?.expiresIn * 1000;
           localStorage.setItem("expiresIn", expires);

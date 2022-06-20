@@ -1,0 +1,10 @@
+.body {
+    flex: 0.96;
+    height: 91vh;
+    background: #121212;
+    color: white;
+    justify-content: center;
+    padding: 20px;
+    overflow-y: scroll;
+    padding-bottom: 350px;
+  }

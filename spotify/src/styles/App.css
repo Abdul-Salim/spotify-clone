@@ -5,3 +5,12 @@
   color: white !important;
   border: none !important;
 }
+body {
+  background-color: #111;
+}
+.search-link {
+  color:  white !important;
+}
+.search-result-artist > a {
+  color: #fff !important;
+}

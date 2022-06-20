@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import PlayCircleFilledWhiteSharpIcon from "@mui/icons-material/PlayCircleFilledWhiteSharp";
 import PlayIcon from "./PlayIcon";
 
 const Albums = ({ album, playPlaylist }) => {
@@ -29,8 +28,12 @@ const Albums = ({ album, playPlaylist }) => {
             )}{" "}
           </div>
           <div className="card-outer">
-            <p className="dark">{album.title}</p>
-            <p className="light">By {album?.artist}</p>
+            <p className="dark m-0 mt-1">
+              {album.title?.length > 15
+                ? album.title?.substring(0, 15) + "..."
+                : album.title}
+            </p>
+            <p className="light m-0">By {album?.artist}</p>
           </div>
         </div>
       </Link>

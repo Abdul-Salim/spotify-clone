@@ -1,7 +1,9 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import spotifyApi from "../spotify";
-const CategoryItem = ({ item }) => {
+const CategoryItem = ({ item, setSearchPlaylist }) => {
   const accessToken = localStorage.getItem("accessToken");
+  const navigate = useNavigate();
   //   const color = randomColor();
   const getPlaylists = (id) => {
     if (accessToken) {
@@ -13,6 +15,8 @@ const CategoryItem = ({ item }) => {
         .then(
           function (data) {
             console.log(data);
+            setSearchPlaylist(data?.body?.playlists?.items);
+            navigate(`/search/playlists/${item?.name}`);
           },
           function (err) {
             console.log("Something went wrong!", err);

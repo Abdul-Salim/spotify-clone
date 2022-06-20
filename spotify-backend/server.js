@@ -31,7 +31,6 @@ app.post("/refresh", (req, res) => {
       });
     })
     .catch((err) => {
-      console.log(err);
       res.sendStatus(400);
     });
 });
@@ -74,7 +73,7 @@ app.get("/playlists", async (req, res) => {
       return res.json(response.body);
     })
     .catch((err) => {
-      console.log(err.message);
+      res.sendStatus(400);
     });
 });
 
@@ -90,7 +89,7 @@ app.get("/playlist", async (req, res) => {
       return res.json(result);
     })
     .catch((err) => {
-      console.log(err.message);
+      res.sendStatus(400);
     });
 });
 
@@ -103,7 +102,7 @@ app.get("/me", async (req, res) => {
       return res.json(response.body);
     })
     .catch((err) => {
-      console.log(err.message);
+      res.sendStatus(400);
     });
 });
 
@@ -129,7 +128,7 @@ app.get("/search-artists", async (req, res) => {
       return res.json(artists);
     })
     .catch((err) => {
-      console.error(err);
+      res.sendStatus(400);
     });
 });
 
@@ -160,7 +159,7 @@ app.get("/search-tracks", async (req, res) => {
       return res.json(tracks);
     })
     .catch((err) => {
-      console.error(err);
+      res.sendStatus(400);
     });
 });
 
@@ -191,7 +190,7 @@ app.get("/search-playlists", async (req, res) => {
       return res.json(playlists);
     })
     .catch((err) => {
-      console.error(err);
+      res.sendStatus(400);
     });
 });
 
@@ -202,7 +201,6 @@ app.get("/search-albums", async (req, res) => {
   spotify
     .searchAlbums(keyword, { limit: limit })
     .then((data) => {
-      // console.log(data);
       const albums = data.body.albums.items.map((album) => {
         const largestAlbumImage = album.images.reduce((largest, image) => {
           if (image.height > largest.height) return image;
@@ -220,7 +218,7 @@ app.get("/search-albums", async (req, res) => {
       return res.json(albums);
     })
     .catch((err) => {
-      console.error(err);
+      res.sendStatus(400);
     });
 });
 
@@ -235,7 +233,6 @@ app.get("/categories", async (req, res) => {
       country: country,
     })
     .then((data) => {
-      console.log(data);
       const categories = data.body.categories.items.map((item) => ({
         ...item,
         color: Math.random().toString(16).substr(-6),
@@ -243,7 +240,7 @@ app.get("/categories", async (req, res) => {
       return res.json(categories);
     })
     .catch((err) => {
-      console.log("err", err);
+      res.sendStatus(400);
     });
 });
 

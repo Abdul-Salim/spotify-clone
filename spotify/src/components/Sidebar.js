@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useRecoilState } from "recoil";
 import "../styles/Sidebar.css";
 import SidebarOption from "./SidebarOption";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
@@ -7,12 +8,14 @@ import LibraryMusicSharpIcon from "@mui/icons-material/LibraryMusicSharp";
 import AddBoxRoundedIcon from "@mui/icons-material/AddBoxRounded";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 
-import { useDataLayerValue } from "../context/DataLayer";
 import { Link, NavLink } from "react-router-dom";
 import spotifyApi from "../spotify";
+import { playlistState } from "../recoil/atoms/playlistStateAtom";
+import SpotifyWhiteLogo from "../assets/images/spotify-logo-white.png";
+
 function Sidebar() {
-  const [{ playlists }, dispatch] = useDataLayerValue();
   const accessToken = localStorage.getItem("accessToken");
+  const [playList, setPlayLists] = useRecoilState(playlistState);
 
   useEffect(() => {
     if (accessToken) {
@@ -20,25 +23,21 @@ function Sidebar() {
       spotifyApi
         ?.getUserPlaylists()
         .then((res) => {
-          dispatch({
-            type: "SET_PLAYLISTS",
-            playlists: res?.body,
-          });
+          setPlayLists({ ...playList, playlist: res?.body });
         })
         .catch((err) => {
           console.log(err.message);
         });
     }
-  }, [accessToken, dispatch]);
+  }, [accessToken]);
 
   return (
     <div className="sidebar">
-      <img
-        src="https://getheavy.com/wp-content/uploads/2019/12/spotify2019-830x350.jpg"
-        alt=""
-        className="sidebar__logo"
-      />
-      <NavLink to="/home" activeClassName="active-link">
+      <NavLink to="/" activeClassName="active-link">
+        <img src={SpotifyWhiteLogo} alt="" className="sidebar__logo" />
+      </NavLink>
+
+      <NavLink to="/" activeClassName="active-link">
         <SidebarOption title="Home" Icon={HomeOutlinedIcon} />
       </NavLink>
       <NavLink to="/search" activeClassName="active-link">
@@ -48,7 +47,7 @@ function Sidebar() {
         <SidebarOption title="Your Library" Icon={LibraryMusicSharpIcon} />
       </NavLink>
       <br />
-      <NavLink to="/playlist/create" activeClassName="active-link">
+      <NavLink to="/create-playlist" activeClassName="active-link">
         <SidebarOption title="Create Playlist" Icon={AddBoxRoundedIcon} />
       </NavLink>
       <NavLink to="/liked" activeClassName="active-link">
@@ -57,7 +56,7 @@ function Sidebar() {
       <hr className="line" />
       <div className="playlists">
         {/* <strong className="sidebar__title">PLAYLISTS</strong> */}
-        {playlists?.items?.map((playlist) => (
+        {playList?.playlist?.items?.map((playlist) => (
           <SidebarOption
             key={playlist.id}
             title={playlist.name}

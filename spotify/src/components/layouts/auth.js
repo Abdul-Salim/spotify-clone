@@ -1,32 +1,30 @@
 import React, { useEffect } from "react";
-import { Route, Redirect, useNavigate,  } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useRecoilState } from "recoil";
 
-import { useDataLayerValue } from "../../context/DataLayer";
 import spotifyApi from "../../spotify";
 import AuthRoutes from "../../routes/auth";
+import { tokenState } from "../../recoil/atoms/userAtom";
 
 function AuthLayout() {
   const navigate = useNavigate();
-  const [{}, dispatch] = useDataLayerValue();
+  const [token, setToken] = useRecoilState(tokenState);
+
   const accessToken = localStorage.getItem("accessToken");
   const expiresIn = localStorage.getItem("expiresIn");
   const refreshToken = localStorage.getItem("refreshToken");
 
   useEffect(() => {
-    // if (isNaN(expiresIn) || accessToken === "undefined" || !refreshToken)
-    //   return;
     if (
       new Date().getTime() <= expiresIn &&
       accessToken &&
-      accessToken !== "undefined"
+      accessToken !== "undefined" &&
+      refreshToken
     ) {
       spotifyApi.setAccessToken(accessToken);
-      dispatch({
-        type: "SET_TOKEN",
-        accessToken: accessToken,
-      });
-      navigate("/home");
+      setToken(accessToken);
+      navigate("/");
     } else {
       if (refreshToken) {
         if (new Date().getTime() >= expiresIn) {
@@ -41,10 +39,7 @@ function AuthLayout() {
                 new Date().getTime() + res?.data?.expiresIn * 1000;
 
               localStorage.setItem("expiresIn", expires);
-              dispatch({
-                type: "SET_TOKEN",
-                accessToken: res?.data?.accessToken,
-              });
+              setToken(res?.data?.accessToken);
               spotifyApi.setAccessToken(accessToken);
               navigate("/home");
             })
@@ -52,10 +47,16 @@ function AuthLayout() {
               window.location = "/";
             });
         }
+      } else {
+        navigate("/auth");
       }
     }
-  }, [accessToken, dispatch, expiresIn, refreshToken]);
-  return <><AuthRoutes /></>;
+  }, [accessToken, expiresIn, refreshToken]);
+  return (
+    <>
+      <AuthRoutes />
+    </>
+  );
 }
 
 export default AuthLayout;
