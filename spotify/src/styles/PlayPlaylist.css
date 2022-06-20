@@ -63,8 +63,12 @@
 }
 .songs-head {
   display: flex;
-  margin-left: 20px;
-  padding: 20px;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  padding: 5px 20px;
+  color: #bababa;
+  font-weight: 100;
+  border-bottom: 1px solid rgba(255,255,255,.1);
 }
 .head {
   display: flex;
@@ -75,22 +79,29 @@
 .song-title {
   display: flex;
   width: 450px;
+  font-size: 12px;
 }
 .song-number {
   display: flex;
   width: 30px;
+  font-size: 12px;
 }
 .song-album {
   display: flex;
   width: 300px;
+  font-size: 12px;
 }
 .song-date {
   display: flex;
   width: 150px;
+  font-size: 12px;
+
 }
 .song-time {
   display: flex;
   justify-content: flex-end;
+  font-size: 12px;
+
 }
 .body__infoText small span {
   padding-left: 3px;

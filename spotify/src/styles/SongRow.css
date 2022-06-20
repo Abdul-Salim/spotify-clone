@@ -1,11 +1,12 @@
 .songRow {
   margin-left: 20px;
-  padding: 20px;
+  padding: 5px 10px;
   display: flex;
   align-items: center;
-  /* z-index: 100; */
-  color: white;
   position: relative;
+  font-size: 14px;
+  color: #b3b3b3; 
+  margin-bottom: 5px;
 }
 .play-icon {
   position: absolute;
@@ -13,18 +14,19 @@
 }
 .songRow:hover {
   cursor: pointer;
-  background-color: black;
-  opacity: 0.8;
+  background-color: rgba(255,255,255,.3);
+  color: #fff;
 }
 .songRow__info {
   margin-left: 20px;
 }
-.songRow__info > h1 {
+.songRow__info > h6 {
   font-size: 16px;
+  font-weight: 400;
+  color: #fff;
 }
 .songRow__info > p {
   font-size: 14px;
-  margin-top: 3px;
   color: gray;
 }
 .songRow__album {

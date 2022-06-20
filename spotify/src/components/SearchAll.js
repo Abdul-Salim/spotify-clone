@@ -65,9 +65,19 @@ const SearchAll = () => {
   };
 
   function chooseTrack(track) {
-    setPlayerState({ ...playerStateVal, playingTrack: track });
-    // setSearch("");
-    // setLyrics("");
+    if (playerStateVal.playingTrack === track) {
+      if (!playerStateVal?.playing) {
+        setPlayerState({
+          ...playerStateVal,
+          playingTrack: track,
+          playing: true,
+        });
+      } else {
+        setPlayerState({ ...playerStateVal, playing: false });
+      }
+    } else {
+      setPlayerState({ ...playerStateVal, playing: true, playingTrack: track });
+    }
   }
 
   const changeNavbarColor = () => {
@@ -132,8 +142,8 @@ const SearchAll = () => {
           )}
           {playlists?.length > 0 && (
             <>
-              <div className="result-head">
-                <h2 className="head">Playlists</h2>
+              <div className="result-head pb-5">
+                <h1 className="head">{console.log(playlists)} Playlists</h1>
               </div>
               <div className="search-result-artist">
                 {playlists?.map((playlist) => (

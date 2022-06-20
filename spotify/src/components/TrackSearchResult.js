@@ -57,7 +57,7 @@ export default function TrackSearchResult({ track, chooseTrack, index }) {
       onMouseEnter={() => setShow(track?.id)}
       onMouseLeave={() => setShow()}
     >
-      <p className="mx">
+      <p className="mx mb-0">
         {show === track?.id ? (
           playerStateVal?.playingTrack === track &&
           playerStateVal?.playing === true ? (
@@ -70,14 +70,15 @@ export default function TrackSearchResult({ track, chooseTrack, index }) {
         )}
       </p>
       <img
-        src={track?.albumUrl}
-        // style={{ height: "64px", width: "64px" }}
+        src={track?.albumUrl || track?.album?.images[0]?.url}
         className="songRow__album"
         alt="album"
       />
       <div className="songRow__info">
-        <div>{track?.title}</div>
-        <div className="text-muted">{track?.artist}</div>
+        <div>{track?.title || track?.name}</div>
+        <div className="text-muted">
+          {track?.artist || track?.artists?.map((artist) => artist?.name)}
+        </div>
       </div>
     </div>
   );

@@ -12,6 +12,8 @@ export default function AudioPlayer({ trackUri }) {
   useEffect(() => {
     if (playerStateVal.playing === false) {
       setPlay(false);
+    } else {
+      setPlay(true);
     }
   }, [playerStateVal.playing]);
 
@@ -30,11 +32,13 @@ export default function AudioPlayer({ trackUri }) {
         showSaveIcon
         syncExternalDevice
         callback={(state) => {
+          console.log(state);
           if (!state.isPlaying) {
             setPlay(false);
             setPlayerState({ ...playerStateVal, playing: false });
           } else {
-            setPlayerState({ ...playerStateVal, playing: false });
+            setPlay(true);
+            setPlayerState({ ...playerStateVal, playing: true });
           }
         }}
         play={play}

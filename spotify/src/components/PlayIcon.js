@@ -1,13 +1,13 @@
 import React from "react";
 
-const PlayIcon = ({ height, width, playPlaylist }) => {
+const PlayIcon = ({ height, width, item, playPlaylist }) => {
   const x = Number(width) / 2;
   const y = Number(height) / 2;
   return (
     <div
       className="spotify-play"
       style={{ height: `${height}px`, width: `${width}px` }}
-      onClick={() => playPlaylist()}
+      onClick={(e) => playPlaylist(e, item)}
     >
       <svg
         height={y}

@@ -10,6 +10,7 @@ import { getTokenFromUrl } from "../../spotify";
 import PortalRoutes from "../../routes/portal";
 import { tokenState } from "../../recoil/atoms/userAtom";
 import { useNavigate } from "react-router-dom";
+import { allPlaylists } from "../../recoil/atoms/playlistStateAtom";
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -22,7 +23,7 @@ class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.log(error, errorInfo);
+    console.log("error", error);
   }
 
   render() {
@@ -49,6 +50,21 @@ const Portal = () => {
   const refreshToken = localStorage.getItem("refreshToken");
   const expiresIn = localStorage.getItem("expiresIn");
   const accessToken = localStorage.getItem("accessToken");
+  const [playList, setPlayLists] = useRecoilState(allPlaylists);
+
+  useEffect(() => {
+    if (accessToken) {
+      spotifyApi?.setAccessToken(accessToken);
+      spotifyApi
+        ?.getUserPlaylists()
+        .then((res) => {
+          setPlayLists(res?.body);
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    }
+  }, [accessToken]);
 
   useEffect(() => {
     if (refreshToken) {

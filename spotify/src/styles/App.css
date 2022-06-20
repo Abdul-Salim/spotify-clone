@@ -7,10 +7,14 @@
 }
 body {
   background-color: #111;
+  font-family: Helvetica;
 }
 .search-link {
   color:  white !important;
 }
 .search-result-artist > a {
   color: #fff !important;
+}
+.cursor-pointer {
+  cursor: pointer;
 }

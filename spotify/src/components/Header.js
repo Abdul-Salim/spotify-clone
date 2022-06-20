@@ -15,6 +15,7 @@ import { getMe } from "../services/spotifyFunctions";
 import { useNavigate } from "react-router-dom";
 import { userState } from "../recoil/atoms/userAtom";
 import { headerState } from "../recoil/atoms/headerStateAtom";
+import CrossIcon from "../assets/images/cross-icon";
 
 const Header = () => {
   const [headerStateVal, setHeaderState] = useRecoilState(headerState);
@@ -65,10 +66,13 @@ const Header = () => {
     >
       <div className="header__left">
         <div style={{ marginLeft: "0", display: "flex" }}>
-          <span className="back-icon" onClick={() => goBack()}>
+          <span className="back-icon cursor-pointer" onClick={() => goBack()}>
             <ArrowBackIosIcon />
           </span>
-          <span className="front-icon" onClick={() => navigate(1)}>
+          <span
+            className="front-icon cursor-pointer"
+            onClick={() => navigate(1)}
+          >
             <ArrowForwardIosIcon />
           </span>
         </div>
@@ -90,6 +94,11 @@ const Header = () => {
               value={searchValue}
               onChange={onChange}
             />
+            {searchValue?.length > 0 ? (
+              <CrossIcon className="cross" onClick={() => setSearchValue("")} />
+            ) : (
+              ""
+            )}
           </div>
         )}
       </div>

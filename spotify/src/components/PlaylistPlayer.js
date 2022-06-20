@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useLocation } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import spotifyApi from "../spotify";
 import SongRow from "../components/SongRow";
@@ -11,23 +11,22 @@ import "../styles/PlayPlaylist.css";
 import { getPlaylist } from "../services/spotifyFunctions";
 import PlayIcon from "./PlayIcon";
 import { playerState } from "../recoil/atoms/playerStateAtom";
-import { playlistState } from "../recoil/atoms/playlistStateAtom";
 import { headerState } from "../recoil/atoms/headerStateAtom";
+import { activePlaylist } from "../recoil/atoms/activePlaylistAtom";
 
 const PlaylistPlayer = () => {
   const { id } = useParams();
+  const { pathname } = useLocation();
   const ref = useRef();
 
   const [show, setShow] = useState();
-
   const [playerStateVal, setPlayerState] = useRecoilState(playerState);
-  const [playList, setPlayListState] = useRecoilState(playlistState);
+  const [active, setActivePlaylist] = useRecoilState(activePlaylist);
   const [headerStateVal, setHeaderState] = useRecoilState(headerState);
-
+  const accessToken = localStorage.getItem("accessToken");
+  console.log(active);
   const playPlaylist = () => {
-    const urls = playList.activePlaylist.tracks.items.map(
-      (item) => item.track.uri
-    );
+    const urls = active?.tracks.items.map((item) => item.track.uri);
     let availableDevices;
     spotifyApi.getMyDevices().then(
       function (data) {
@@ -37,7 +36,6 @@ const PlaylistPlayer = () => {
             console.log("Transfering playback to " + availableDevices);
           },
           function (err) {
-            //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
             console.log("Something went wrong!", err);
           }
         );
@@ -53,10 +51,18 @@ const PlaylistPlayer = () => {
   };
 
   const playSong = (track) => {
-    if (!playerStateVal?.playing) {
-      setPlayerState({ ...playerStateVal, playingTrack: track });
+    if (playerStateVal.playingTrack === track) {
+      if (!playerStateVal?.playing) {
+        setPlayerState({
+          ...playerStateVal,
+          playingTrack: track,
+          playing: true,
+        });
+      } else {
+        setPlayerState({ ...playerStateVal, playing: false });
+      }
     } else {
-      setPlayerState({ ...playerStateVal, playing: false });
+      setPlayerState({ ...playerStateVal, playing: true, playingTrack: track });
     }
   };
 
@@ -69,14 +75,25 @@ const PlaylistPlayer = () => {
   };
 
   useEffect(() => {
-    getPlaylist({ id: id })
-      .then((res) => {
-        console.log("hi", res);
-        setPlayListState({ ...playList, activePlaylist: res?.data });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (pathname.split("/")[1] === "playlist") {
+      getPlaylist({ id: id })
+        .then((res) => {
+          console.log(res);
+          setActivePlaylist(res?.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else if (pathname.split("/")[1] === "artist") {
+      spotifyApi.getArtistAlbums(id).then(
+        function (data) {
+          console.log("Artist albums", data.body);
+        },
+        function (err) {
+          console.error(err);
+        }
+      );
+    }
   }, [id]);
 
   return (
@@ -84,24 +101,31 @@ const PlaylistPlayer = () => {
       <div
         className="body__info"
         style={{
-          background: `linear-gradient(#${playList?.activePlaylist?.primary_color}, #121212 )`,
+          background: `linear-gradient(#${active?.primary_color}, #121212 )`,
         }}
       >
-        {/* <img src={playList?.activePlaylist?.images[0]?.url} alt="" /> */}
-        <div className="body__infoText">
-          <strong>PLAYLISTS</strong>
-          <h2>{playList?.activePlaylist?.name}</h2>
-          <p>{playList?.activePlaylist?.description}</p>
-          <small>
-            <Link to="/">{playList?.activePlaylist?.owner?.display_name}</Link>{" "}
-            <span className="dot">•</span>
-            <span className="p-2">
-              {playList?.activePlaylist?.tracks?.items?.length} Songs,{" "}
-            </span>
-            <span className="p-2">
-              {playList?.activePlaylist?.tracks?.items?.length} Songs
-            </span>
-          </small>
+        <div className="d-flex">
+          <div>
+            <img
+              className=""
+              height={192}
+              width={192}
+              src={active?.images ? active?.images[0]?.url : ""}
+            />
+          </div>
+          <div className="body__infoText ms-2 mt-5">
+            <strong>PLAYLISTS</strong>
+            <h2>{active?.name}</h2>
+            <p>{active?.description}</p>
+            <small>
+              <Link to="/">{active?.owner?.display_name}</Link>{" "}
+              <span className="dot">•</span>
+              <span className="p-2">
+                {active?.tracks?.items?.length} Songs,{" "}
+              </span>
+              <span className="p-2">{active?.tracks?.items?.length} Songs</span>
+            </small>
+          </div>
         </div>
       </div>
       <div className="body__songs">
@@ -124,11 +148,9 @@ const PlaylistPlayer = () => {
                 <AccessTimeIcon />
               </th>
             </tr>
-
-            {/* <th>DATE ADDED</th> */}
           </thead>
           <tbody>
-            {playList?.activePlaylist?.tracks?.items?.map((item, index) => (
+            {active?.tracks?.items?.map((item, index) => (
               <tr
                 className="songRow"
                 onClick={() => playSong(item.track)}
