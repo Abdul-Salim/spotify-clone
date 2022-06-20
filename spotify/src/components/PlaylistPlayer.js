@@ -1,28 +1,33 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
+import { useRecoilState } from "recoil";
 import spotifyApi from "../spotify";
-import { useDataLayerValue } from "../context/DataLayer";
 import SongRow from "../components/SongRow";
 
-import PlayCircleFilledWhiteSharpIcon from "@mui/icons-material/PlayCircleFilledWhiteSharp";
 import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
-import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
-import PlayCircleFilledOutlinedIcon from "@mui/icons-material/PlayCircleFilledOutlined";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 import "../styles/PlayPlaylist.css";
 import { getPlaylist } from "../services/spotifyFunctions";
 import PlayIcon from "./PlayIcon";
+import { playerState } from "../recoil/atoms/playerStateAtom";
+import { playlistState } from "../recoil/atoms/playlistStateAtom";
+import { headerState } from "../recoil/atoms/headerStateAtom";
 
 const PlaylistPlayer = () => {
   const { id } = useParams();
+  const ref = useRef();
+
   const [show, setShow] = useState();
 
-  const [{ accessToken, playing, playlist }, dispatch] = useDataLayerValue();
+  const [playerStateVal, setPlayerState] = useRecoilState(playerState);
+  const [playList, setPlayListState] = useRecoilState(playlistState);
+  const [headerStateVal, setHeaderState] = useRecoilState(headerState);
 
   const playPlaylist = () => {
-    console.log(playlist);
-    const urls = playlist.tracks.items.map((item) => item.track.uri);
+    const urls = playList.activePlaylist.tracks.items.map(
+      (item) => item.track.uri
+    );
     let availableDevices;
     spotifyApi.getMyDevices().then(
       function (data) {
@@ -45,22 +50,21 @@ const PlaylistPlayer = () => {
     spotifyApi.play({
       uris: urls,
     });
-    // dispatch({
-    //   type: "SET_PLAYING_TRACK",
-    //   playingTrack: playlist,
-    // });
   };
+
   const playSong = (track) => {
-    if (!playing) {
-      dispatch({
-        type: "SET_PLAYING_TRACK",
-        playingTrack: track,
-      });
+    if (!playerStateVal?.playing) {
+      setPlayerState({ ...playerStateVal, playingTrack: track });
     } else {
-      dispatch({
-        type: "SET_PLAY",
-        isPlaying: false,
-      });
+      setPlayerState({ ...playerStateVal, playing: false });
+    }
+  };
+
+  const changeNavbarColor = () => {
+    if (ref.current.scrollTop >= 80) {
+      setHeaderState({ ...headerStateVal, isBlack: true });
+    } else {
+      setHeaderState({ ...headerStateVal, isBlack: false });
     }
   };
 
@@ -68,36 +72,35 @@ const PlaylistPlayer = () => {
     getPlaylist({ id: id })
       .then((res) => {
         console.log("hi", res);
-        dispatch({
-          type: "SET_PLAYLIST",
-          playlist: res.data,
-        });
+        setPlayListState({ ...playList, activePlaylist: res?.data });
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [dispatch, id]);
+  }, [id]);
 
   return (
-    <div className="play-playlist">
+    <div className="play-playlist" ref={ref} onScroll={changeNavbarColor}>
       <div
         className="body__info"
         style={{
-          background: `linear-gradient(#${playlist?.primary_color}, #121212 )`,
+          background: `linear-gradient(#${playList?.activePlaylist?.primary_color}, #121212 )`,
         }}
       >
-        <img src={playlist?.images[0].url} alt="" />
+        {/* <img src={playList?.activePlaylist?.images[0]?.url} alt="" /> */}
         <div className="body__infoText">
           <strong>PLAYLISTS</strong>
-          <h2>{playlist?.name}</h2>
-          <p>{playlist?.description}</p>
+          <h2>{playList?.activePlaylist?.name}</h2>
+          <p>{playList?.activePlaylist?.description}</p>
           <small>
-            <Link to="/">{playlist?.owner?.display_name}</Link>{" "}
+            <Link to="/">{playList?.activePlaylist?.owner?.display_name}</Link>{" "}
             <span className="dot">•</span>
             <span className="p-2">
-              {playlist?.tracks?.items?.length} Songs,{" "}
+              {playList?.activePlaylist?.tracks?.items?.length} Songs,{" "}
             </span>
-            <span className="p-2">{playlist?.tracks?.items?.length} Songs</span>
+            <span className="p-2">
+              {playList?.activePlaylist?.tracks?.items?.length} Songs
+            </span>
           </small>
         </div>
       </div>
@@ -108,7 +111,6 @@ const PlaylistPlayer = () => {
             height="56"
             playPlaylist={() => playPlaylist()}
           />
-          {/* <FavoriteBorderOutlinedIcon fontSize="large" /> */}
           <MoreHorizOutlinedIcon className="more" />
         </div>
         <table className="songs">
@@ -126,8 +128,7 @@ const PlaylistPlayer = () => {
             {/* <th>DATE ADDED</th> */}
           </thead>
           <tbody>
-            {console.log(playlist)}
-            {playlist?.tracks.items.map((item, index) => (
+            {playList?.activePlaylist?.tracks?.items?.map((item, index) => (
               <tr
                 className="songRow"
                 onClick={() => playSong(item.track)}

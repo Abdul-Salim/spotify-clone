@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import "../styles/App.css";
 import BaseRoutes from "../routes/index";

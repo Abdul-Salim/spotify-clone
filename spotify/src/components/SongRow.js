@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
+import { useRecoilState } from "recoil";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 import "../styles/SongRow.css";
-import { useDataLayerValue } from "../context/DataLayer";
+import { playerState } from "../recoil/atoms/playerStateAtom";
 
 function SongRow({ track, playSong, index, show, date }) {
-  const [{ playingTrack, playing }] = useDataLayerValue();
+  const [playerStateVal, setPlayerState] = useRecoilState(playerState);
   function millisToMinutesAndSeconds(millis) {
     var minutes = Math.floor(millis / 60000);
     var seconds = ((millis % 60000) / 1000).toFixed(0);
@@ -16,7 +17,8 @@ function SongRow({ track, playSong, index, show, date }) {
     <>
       <td className="song-number">
         {show === track?.id ? (
-          playingTrack === track && playing === true ? (
+          playerStateVal?.playingTrack === track &&
+          playerStateVal?.playing === true ? (
             <PauseIcon />
           ) : (
             <PlayArrowIcon className="song-play" />
@@ -28,7 +30,7 @@ function SongRow({ track, playSong, index, show, date }) {
       <td className="song-title">
         <img
           className="songRow__album"
-          src={track?.album?.images[0].url}
+          src={track?.album?.images[0]?.url}
           alt=""
         />
         <span className="songRow__info">

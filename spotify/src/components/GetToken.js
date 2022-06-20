@@ -1,46 +1,38 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
 import axios from "axios";
-import { useDataLayerValue } from "../context/DataLayer";
 import spotifyApi from "../spotify";
 import CircularProgress from "@mui/material/CircularProgress";
+import { tokenState } from "../recoil/atoms/userAtom";
 
 const GetToken = () => {
   const navigate = useNavigate();
-  const [, dispatch] = useDataLayerValue();
+  const [token, setToken] = useRecoilState(tokenState);
+
   const [loading, setLoading] = useState(false);
   const code = new URLSearchParams(window.location.search).get("code");
 
   useEffect(() => {
     setLoading(true);
-    const timeout = setTimeout(() => {
-      axios
-        .post("http://localhost:4000/login", {
-          code,
-        })
-        .then((res) => {
-          localStorage.setItem("refreshToken", res?.data?.refreshToken);
-          localStorage.setItem("accessToken", res?.data?.accessToken);
-          const expires = new Date().getTime() + res?.data?.expiresIn * 1000;
-          localStorage.setItem("expiresIn", expires);
-          // setAccessToken(res.data.accessToken);
-          dispatch({
-            type: "SET_TOKEN",
-            accessToken: res.data.accessToken,
-          });
-          spotifyApi.setAccessToken(res?.data?.accessToken);
-          setLoading(false);
-          navigate("/home");
-        })
-        .catch(() => {
-          setLoading(false);
-          window.location = "/";
-        });
-    }, 1000);
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [code, dispatch]);
+    axios
+      .post("http://localhost:4000/login", {
+        code,
+      })
+      .then((res) => {
+        localStorage.setItem("refreshToken", res?.data?.refreshToken);
+        localStorage.setItem("accessToken", res?.data?.accessToken);
+        const expires = new Date().getTime() + res?.data?.expiresIn * 1000;
+        localStorage.setItem("expiresIn", expires);
+        spotifyApi.setAccessToken(res?.data?.accessToken);
+        spotifyApi.setRefreshToken(res?.data?.refreshToken);
+        setToken(res?.data?.accessToken);
+        navigate("/");
+      })
+      .catch((err) => {
+        navigate("/auth");
+      });
+  }, [code]);
 
   // useEffect(() => {
   //   if (accessToken) {

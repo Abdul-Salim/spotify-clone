@@ -1,17 +1,19 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./styles/index.css";
+import { BrowserRouter } from "react-router-dom";
+import { RecoilRoot } from "recoil";
+import "bootstrap/dist/css/bootstrap.min.css";
+
 import App from "./components/App";
 import reportWebVitals from "./reportWebVitals";
-import { DataLayer } from "./context/DataLayer";
-import reducer, { initialState } from "./context/reducer";
-import { BrowserRouter } from "react-router-dom";
+import "./styles/index.css";
+
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
-      <DataLayer initialState={initialState} reducer={reducer}>
+      <RecoilRoot>
         <App />
-      </DataLayer>
+      </RecoilRoot>
     </BrowserRouter>
   </React.StrictMode>,
   document.getElementById("root")

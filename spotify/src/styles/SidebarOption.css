@@ -17,8 +17,7 @@
   color: white;
 }
 .sidebarOption__icon {
-  padding-left: 10px;
-  padding-right: 10px;
+  margin: 0px 10px;
 }
 .playlist-title {
   margin-top: 10px;
@@ -27,10 +26,9 @@
   color: gray;
 }
 .sidebarOption > h4 {
-  /* margin-top: 10px;
-  margin-left: 20px; */
   font-size: 14px;
   font-weight: 700;
+  margin: 0;
 }
 .playlist {
 }

@@ -4,10 +4,10 @@ import GetToken from "../components/GetToken";
 
 const AuthRoutes = () => {
   let authRoutes = useRoutes([
-    {
-      path: "get-token",
-      element: <GetToken />,
-    },
+    // {
+    //   path: "get-token",
+    //   element: <GetToken />,
+    // },
     {
       path: "login",
       element: <Login />,

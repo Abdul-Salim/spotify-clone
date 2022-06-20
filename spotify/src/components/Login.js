@@ -1,17 +1,9 @@
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
 
 import "../styles/Login.css";
 import { loginUrl } from "../spotify";
-import { useDataLayerValue } from "../context/DataLayer";
 
 function Login() {
-  const navigate = useNavigate();
-  const [{}, dispatch] = useDataLayerValue();
-  const accessToken = localStorage.getItem("accessToken");
-  const expiresIn = localStorage.getItem("expiresIn");
-  const refreshToken = localStorage.getItem("refreshToken");
-
   return (
     <div className="login">
       <img

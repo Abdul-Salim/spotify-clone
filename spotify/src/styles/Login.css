@@ -4,6 +4,7 @@
   height: 100vh;
   background-color: black;
   width: 100%;
+  position: relative;
 }
 .login > img {
   width: 100%;
@@ -15,4 +16,6 @@
   font-weight: 800;
   border-radius: 99px;
   text-decoration: none;
+  position: absolute;
+  bottom: 50px;
 }

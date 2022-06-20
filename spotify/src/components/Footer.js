@@ -1,21 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useRecoilValue } from "recoil";
 
 import AudioPlayer from "./AudioPlayer";
-import { useDataLayerValue } from "../context/DataLayer";
-import getAccessToken from "../hooks/useAuth";
 
 import "../styles/Footer.css";
+import { playerState } from "../recoil/atoms/playerStateAtom";
 
-function Footer({ spotify }) {
-  const [{ playingTrack }] = useDataLayerValue();
-
+function Footer() {
+  const { playingTrack } = useRecoilValue(playerState);
   const accessToken = localStorage.getItem("accessToken");
 
-  // const [accessToken, setAccessToken] = useState();
-  // useEffect(() => {
-  //   const token = getAccessToken();
-  //   setAccessToken(token);
-  // }, []);
   return (
     <div className="footer">
       {accessToken && (

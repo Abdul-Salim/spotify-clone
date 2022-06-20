@@ -1,65 +1,30 @@
 import { useState, useEffect } from "react";
 import SpotifyPlayer from "react-spotify-web-playback";
-// import { getAccessToken } from "../helpers/api";
-import { useDataLayerValue } from "../context/DataLayer";
+import { useRecoilState } from "recoil";
 
-import SkipNextIcon from "@mui/icons-material/SkipNext";
-import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
+import { playerState } from "../recoil/atoms/playerStateAtom";
 
 export default function AudioPlayer({ trackUri }) {
   const [play, setPlay] = useState(false);
   // const [accessToken, setAccessToken] = useState();
-  const [{ playlist, playingTrack, playing }, dispatch] = useDataLayerValue();
+  const [playerStateVal, setPlayerState] = useRecoilState(playerState);
   const accessToken = localStorage.getItem("accessToken");
   useEffect(() => {
-    if (playing === false) {
+    if (playerStateVal.playing === false) {
       setPlay(false);
     }
-  }, [playing]);
-
-  const playNext = () => {
-    let nextTrack;
-    playlist?.tracks.items.forEach((item, index) => {
-      if (item?.track?.id === playingTrack?.id) {
-        if (index < playlist.tracks.items.length - 1) {
-          nextTrack = playlist.tracks.items[index + 1].track;
-        }
-      }
-    });
-    dispatch({
-      type: "SET_PLAYING_TRACK",
-      playingTrack: nextTrack,
-    });
-  };
-
-  const playPrevious = () => {
-    let previousTrack;
-    playlist?.tracks.items.forEach((item, index) => {
-      if (item?.track.id === playingTrack.id) {
-        if (index > 0) {
-          previousTrack = playlist?.tracks.items[index - 1].track;
-        }
-      }
-    });
-    dispatch({
-      type: "SET_PLAYING_TRACK",
-      playingTrack: previousTrack,
-    });
-  };
+  }, [playerStateVal.playing]);
 
   useEffect(() => {
     if (trackUri) {
       setPlay(true);
-      dispatch({ type: "SET_PLAY", isPlaying: true });
+      setPlayerState({ ...playerStateVal, playing: true });
     }
-  }, [dispatch, trackUri]);
+  }, [trackUri]);
 
   if (!accessToken) return null;
   return (
     <>
-      {/* <span className="previous" onClick={() => playPrevious()}>
-        <SkipPreviousIcon sx={{ color: "#fff" }} />
-      </span> */}
       <SpotifyPlayer
         token={accessToken}
         showSaveIcon
@@ -67,9 +32,9 @@ export default function AudioPlayer({ trackUri }) {
         callback={(state) => {
           if (!state.isPlaying) {
             setPlay(false);
-            dispatch({ type: "SET_PLAY", isPlaying: false });
+            setPlayerState({ ...playerStateVal, playing: false });
           } else {
-            dispatch({ type: "SET_PLAY", isPlaying: true });
+            setPlayerState({ ...playerStateVal, playing: false });
           }
         }}
         play={play}
