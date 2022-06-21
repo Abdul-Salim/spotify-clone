@@ -34,13 +34,19 @@ function SongRow({ track, playSong, index, show, date }) {
           alt=""
         />
         <span className="songRow__info">
-          <h1>{track?.name}</h1>
-          <p>{track?.artists?.map((artist) => artist?.name).join(", ")} - </p>
+          <h6 className="mb-0">
+            {track?.name?.length > 42
+              ? track?.name?.substring(0, 42) + "..."
+              : track?.name}
+          </h6>
+          <p className="mb-0">
+            {track?.artists?.map((artist) => artist?.name).join(", ")} -{" "}
+          </p>
         </span>
       </td>
       <td className="song-album">{track?.album?.name}</td>
       <td className="song-date">
-        {new Date(date).toISOString().split("T")[0]}
+        {/* {new Date(date)?.toISOString()?.split("T")[0]} */}
       </td>
       <td className="song-time">
         {millisToMinutesAndSeconds(track?.duration_ms)}

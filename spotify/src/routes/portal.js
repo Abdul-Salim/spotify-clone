@@ -5,6 +5,8 @@ import Search from "../components/Search";
 import PlaylistPlayer from "../components/PlaylistPlayer";
 import SearchAll from "../components/SearchAll";
 import Library from "../components/Library";
+import ListAlbumSongs from "../components/ListAlbumSongs";
+import ListArtistSongs from "../components/ListArtistSongs";
 
 const PortalRoutes = () => {
   const portalRoutes = useRoutes([
@@ -26,7 +28,11 @@ const PortalRoutes = () => {
     },
     {
       path: "artist/:id",
-      element: <PlaylistPlayer />,
+      element: <ListArtistSongs />,
+    },
+    {
+      path: "albums/:id",
+      element: <ListAlbumSongs />,
     },
     {
       path: "search/:path/:search",

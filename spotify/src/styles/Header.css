@@ -135,3 +135,9 @@
 .front-icon > svg:disabled {
   fill: #676767;
 }
+.cross {
+  position: absolute; 
+  right: 15px;
+  top: 8px;
+  cursor: pointer;
+}

@@ -11,7 +11,7 @@ function Footer() {
   const accessToken = localStorage.getItem("accessToken");
 
   return (
-    <div className="footer">
+    <div className="footer-player">
       {accessToken && (
         <AudioPlayer accessToken={accessToken} trackUri={playingTrack?.uri} />
       )}

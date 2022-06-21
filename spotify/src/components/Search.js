@@ -3,7 +3,7 @@ import { useRecoilState } from "recoil";
 import TrackSearchResult from "./TrackSearchResult";
 
 import "../styles/Search.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import spotifyApi from "../spotify";
 
 import CircularProgress from "@mui/material/CircularProgress";
@@ -21,16 +21,20 @@ import PlayIcon from "./PlayIcon";
 import { tokenState } from "../recoil/atoms/userAtom";
 import { headerState } from "../recoil/atoms/headerStateAtom";
 import { playerState } from "../recoil/atoms/playerStateAtom";
+import { allPlaylists } from "../recoil/atoms/playlistStateAtom";
 
 const Header = () => {
   // const [search, setSearch] = useState("");
   // const [searchResults, setSearchResults] = useState();
   const ref = useRef();
+  const navigate = useNavigate();
+
   const [categories, setCategories] = useState([]);
   // const [lyrics, setLyrics] = useState("");
   const [token] = useRecoilState(tokenState);
   const [headerStateVal, setHeaderState] = useRecoilState(headerState);
   const [playerStateVal, setPlayerState] = useRecoilState(playerState);
+  const [playList, setPlayListState] = useRecoilState(allPlaylists);
 
   const [songs, setSongs] = useState();
   const [show, setShow] = useState();
@@ -39,30 +43,43 @@ const Header = () => {
   const [searchPlaylist, setSearchPlaylist] = useState();
   const [loading, setLoading] = useState(false);
 
-  // const [scrollHeight, setScrollHeight] = useState
-  // const scrollHeight = document.documentElement.scrollHeight;
+  const playPlaylist = (e, id) => {
+    let uris;
+    console.log(id);
+    e.stopPropagation();
+    spotifyApi
+      .getArtistAlbums(id?.id)
+      .then((data) => {
+        console.log("Artist albums", data.body);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    // let availableDevices;
 
-  // useEffect(() => {
-  //   console.log(scrollHeight);
-  // }, [scrollHeight]);
-  // const [show, handleShow] = useState(false);
-
-  // var div = document.getElementById("myDiv");
-
-  // useEffect(() => {
-  //   console.log("")
-  //   div?.addEventListener("scroll", () => {
-  //     if (div?.scrollTop > 10) {
-  //       setHeaderState({ ...headerStateVal, isBlack: true });
-  //     } else setHeaderState({ ...headerStateVal, isBlack: false });
-  //   });
-  //   return () => {
-  //     div?.removeEventListener("scroll", null);
-  //   };
-  // }, [div]);
-
-  const playPlaylist = (id) => {
-    setPlayerState({ ...playerStateVal, playingTrack: id });
+    // spotifyApi.getMyDevices().then(
+    //   function (data) {
+    //     availableDevices = data.body.devices[0];
+    //     spotifyApi.transferMyPlayback([availableDevices]).then(
+    //       function () {
+    //         console.log("Transfering playback to " + availableDevices);
+    //       },
+    //       function (err) {
+    //         //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
+    //         console.log("Something went wrong!", err);
+    //       }
+    //     );
+    //     console.log(availableDevices);
+    //   },
+    //   function (err) {
+    //     console.log("Something went wrong!", err);
+    //   }
+    // );
+    // spotifyApi.play({
+    //   uris: uris,
+    // });
+    // setPlayListState({...playList, activePlaylist: })
+    // setPlayerState({ ...playerStateVal, playingTrack: id });
   };
 
   const seeall = (type) => {
@@ -151,8 +168,6 @@ const Header = () => {
       setSearchPlaylist();
       return;
     }
-    // if (!accessToken) return;
-
     setLoading(true);
     searchTracks({ keyword: headerStateVal?.search, limit: 4 })
       .then((res) => {
@@ -187,75 +202,6 @@ const Header = () => {
         console.log("err", err);
         setLoading(false);
       });
-    // spotifyApi?.searchTracks(headerStateVal?.search, { limit: 5 }).then((res) => {
-    //   setSongs(
-    //     res.body.tracks.items.map((track) => {
-    //       const smallestAlbumImage = track.album.images.reduce(
-    //         (smallest, image) => {
-    //           if (image.height < smallest.height) return image;
-    //           return smallest;
-    //         },
-    //         track.album.images[0]
-    //       );
-
-    //       return {
-    //         artist: track.artists[0].name,
-    //         title: track.name,
-    //         uri: track.uri,
-    //         albumUrl: smallestAlbumImage.url,
-    //       };
-    //     })
-    //   );
-    // });
-    // spotify
-    //   ?.searchArtists(search, { limit: 5 })
-    //   .then((data) => {
-    //     setArtist(
-    //       data.body.artists.items.map((artist) => {
-    //         const smallestArtistImage = artist?.images.reduce(
-    //           (smallest, image) => {
-    //             if (image.height > smallest.height) return image;
-    //             return smallest;
-    //           },
-    //           artist.images[0]
-    //         );
-    //         return {
-    //           name: artist.name,
-    //           uri: artist.uri,
-    //           image: smallestArtistImage?.url,
-    //         };
-    //       })
-    //     );
-    //   })
-    //   .catch((err) => {
-    //     console.error(err);
-    //   });
-    // spotify
-    //   ?.searchPlaylists(search, { limit: 5 })
-    //   .then((data) => {
-    //     setLoading(false);
-    //     setSearchPlaylist(
-    //       data.body.playlists.items.map((playlist) => {
-    //         const smallestPlaylistImage = playlist?.images.reduce(
-    //           (smallest, image) => {
-    //             if (image.height > smallest.height) return image;
-    //             return smallest;
-    //           },
-    //           playlist.images[0]
-    //         );
-
-    //         return {
-    //           name: playlist.name,
-    //           uri: playlist.uri,
-    //           image: smallestPlaylistImage.url,
-    //           owner: playlist.owner,
-    //         };
-    //       })
-    //     );
-    //   })
-    //   .catch((err) => {
-    //     console.error(err);
-    //   });
   }, [token, headerStateVal?.search]);
 
   useEffect(() => {
@@ -269,16 +215,19 @@ const Header = () => {
   }, []);
 
   function chooseTrack(track) {
-    if (
-      playerStateVal?.playingTrack === track &&
-      playerStateVal?.playing === true
-    ) {
-      setPlayerState({ ...playerStateVal, playingTrack: null, playing: false });
+    if (playerStateVal.playingTrack === track) {
+      if (!playerStateVal?.playing) {
+        setPlayerState({
+          ...playerStateVal,
+          playingTrack: track,
+          playing: true,
+        });
+      } else {
+        setPlayerState({ ...playerStateVal, playing: false });
+      }
     } else {
-      setPlayerState({ ...playerStateVal, playingTrack: track });
+      setPlayerState({ ...playerStateVal, playing: true, playingTrack: track });
     }
-    // setSearch("");
-    // setLyrics("");
   }
 
   const changeNavbarColor = () => {
@@ -310,12 +259,6 @@ const Header = () => {
                         </Link>
                       </div>
                       {songs?.map((item, index) => (
-                        // <SongRow
-                        //   playSong={() => chooseTrack(item.track)}
-                        //   track={item.track}
-                        //   index={index}
-                        //   key={item?.id}
-                        // />
                         <TrackSearchResult
                           track={item}
                           key={item?.uri}
@@ -337,10 +280,13 @@ const Header = () => {
                   </div>
                   <div className="search-result-artist">
                     {artists?.map((artist) => (
-                      <Link to={`/artist/${artist.uri.split(":")[2]}`}>
+                      <div
+                        onClick={() =>
+                          navigate(`/artist/${artist.uri.split(":")[2]}`)
+                        }
+                      >
                         <div
                           className="artist-card"
-                          onClick={() => console.log("pppp", artist)}
                           onMouseOver={() => {
                             setShow(artist.uri);
                           }}
@@ -358,7 +304,8 @@ const Header = () => {
                               <PlayIcon
                                 width="40"
                                 height="40"
-                                playPlaylist={() => playPlaylist(artist)}
+                                item={artist}
+                                playPlaylist={playPlaylist}
                               />
                             )}
                           </div>
@@ -371,7 +318,7 @@ const Header = () => {
                             <p className="light">Artist</p>
                           </div>
                         </div>
-                      </Link>
+                      </div>
                     ))}
                   </div>
                   {/* </div> */}
@@ -394,7 +341,7 @@ const Header = () => {
                           >
                             <div
                               className="artist-card"
-                              onClick={() => playPlaylist(playlist)}
+                              onClick={(e) => playPlaylist(e, playlist)}
                               onMouseOver={() => {
                                 setShow(playlist.uri);
                               }}
@@ -412,7 +359,9 @@ const Header = () => {
                                   <PlayIcon
                                     width="40"
                                     height="40"
-                                    playPlaylist={() => playPlaylist(playlist)}
+                                    playPlaylist={(e) =>
+                                      playPlaylist(e, playlist)
+                                    }
                                   />
                                 )}{" "}
                               </div>
@@ -445,7 +394,7 @@ const Header = () => {
                     {albums?.map((album) => (
                       <Albums
                         album={album}
-                        playPlaylist={(album) => playPlaylist(album)}
+                        playPlaylist={(e) => playPlaylist(e, album)}
                         show={show}
                         setShow={() => setShow()}
                       />
