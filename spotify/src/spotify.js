@@ -2,7 +2,7 @@ import SpotifyWebApi from "spotify-web-api-node";
 
 export const authEndpoint = "https://accounts.spotify.com/authorize";
 
-const redirectUri = "http://localhost:3000/redirect/";
+const redirectUri = process.env.REDIRECT_URI;
 const clientId = "9a4e88d573a348c6a248ab88fcf6cdee";
 const scopes = [
   "streaming",
