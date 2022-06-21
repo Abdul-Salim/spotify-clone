@@ -10,7 +10,7 @@ const BaseRoutes = () => {
       element: <AuthLayout />,
     },
     {
-      path: "redirect",
+      path: "redirect/",
       element: <GetToken />,
     },
     {
