@@ -76,8 +76,8 @@ const Body = () => {
   }, [accessToken]);
 
   const playPlaylist = (e, id) => {
-    console.log(e);
-    // e?.stopPropagation();
+    console.log(id);
+    // e.stopPropogation();
     setPlayerState({ ...playerStateVal, playingTrack: id });
   };
 
@@ -117,7 +117,7 @@ const Body = () => {
               {newReleases?.albums?.items?.map((item) => (
                 <div
                   onClick={() =>
-                    navigate(`/playlist/${item?.uri?.split(":")[2]}`)
+                    navigate(`/albums/${item?.uri?.split(":")[2]}`)
                   }
                   className="search-link"
                 >
