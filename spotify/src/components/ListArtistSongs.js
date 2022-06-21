@@ -38,19 +38,19 @@ const ListArtistSongs = () => {
   }, [id]);
 
   return (
-    <div className="d-flex flex-wrap">
-      {/* {tracks?.map((track, index) => (
-        <TrackSearchResult
-          track={track}
-          key={track?.uri}
-          index={index}
-          chooseTrack={() => chooseTrack(track)}
-          // seeall={() => seeall(songs)}
-        />
-      ))} */}
-      {albums?.map((album) => (
-        <Albums album={album} />
-      ))}
+    <div className="search">
+      <div style={{ marginTop: "80px" }}>
+        <div className="search-results">
+          <div className="result-head">
+            <h2 className="head">Artist</h2>
+          </div>
+          <div className="search-result-artist">
+            {albums?.map((album) => (
+              <Albums album={album} />
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

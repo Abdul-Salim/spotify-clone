@@ -5,17 +5,17 @@ import AudioPlayer from "./AudioPlayer";
 
 import "../styles/Footer.css";
 import { playerState } from "../recoil/atoms/playerStateAtom";
+import SpotifyPlayer from "./test-player/Player";
 
 function Footer() {
   const { playingTrack } = useRecoilValue(playerState);
   const accessToken = localStorage.getItem("accessToken");
 
   return (
-    <div className="footer-player">
-      {accessToken && (
-        <AudioPlayer accessToken={accessToken} trackUri={playingTrack?.uri} />
-      )}
-    </div>
+    accessToken && (
+      // <AudioPlayer accessToken={accessToken} trackUri={playingTrack?.uri} />
+      <SpotifyPlayer />
+    )
   );
 }
 

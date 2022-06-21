@@ -214,7 +214,8 @@ const Header = () => {
       });
   }, []);
 
-  function chooseTrack(track) {
+  const playSong = (track) => {
+    console.log(track);
     if (playerStateVal.playingTrack === track) {
       if (!playerStateVal?.playing) {
         setPlayerState({
@@ -222,13 +223,18 @@ const Header = () => {
           playingTrack: track,
           playing: true,
         });
+        spotifyApi.play();
       } else {
+        spotifyApi.pause();
         setPlayerState({ ...playerStateVal, playing: false });
       }
     } else {
+      spotifyApi.play({
+        uris: [track?.uri],
+      });
       setPlayerState({ ...playerStateVal, playing: true, playingTrack: track });
     }
-  }
+  };
 
   const changeNavbarColor = () => {
     if (ref.current.scrollTop >= 80) {
@@ -263,7 +269,7 @@ const Header = () => {
                           track={item}
                           key={item?.uri}
                           index={index}
-                          chooseTrack={() => chooseTrack(item)}
+                          chooseTrack={() => playSong(item)}
                           seeall={() => seeall(songs)}
                         />
                       ))}

@@ -3,6 +3,7 @@ import { useParams, Link, useLocation } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import spotifyApi from "../spotify";
 import SongRow from "../components/SongRow";
+// import { some } from "lodash/some";
 
 import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -13,6 +14,8 @@ import PlayIcon from "./PlayIcon";
 import { playerState } from "../recoil/atoms/playerStateAtom";
 import { headerState } from "../recoil/atoms/headerStateAtom";
 import { activePlaylist } from "../recoil/atoms/activePlaylistAtom";
+import PauseIcon from "../assets/images/pause-icon";
+import _ from "lodash";
 
 const PlaylistPlayer = () => {
   const { id } = useParams();
@@ -24,33 +27,30 @@ const PlaylistPlayer = () => {
   const [active, setActivePlaylist] = useRecoilState(activePlaylist);
   const [headerStateVal, setHeaderState] = useRecoilState(headerState);
   const accessToken = localStorage.getItem("accessToken");
-  console.log(active);
   const playPlaylist = () => {
-    const urls = active?.tracks.items.map((item) => item.track.uri);
-    let availableDevices;
-    spotifyApi.getMyDevices().then(
-      function (data) {
-        availableDevices = data.body.devices[0];
-        spotifyApi.transferMyPlayback([availableDevices]).then(
-          function () {
-            console.log("Transfering playback to " + availableDevices);
-          },
-          function (err) {
-            console.log("Something went wrong!", err);
-          }
-        );
-        console.log(availableDevices);
-      },
-      function (err) {
-        console.log("Something went wrong!", err);
-      }
-    );
-    spotifyApi.play({
-      uris: urls,
-    });
+    if (
+      playerStateVal?.playing &&
+      playerStateVal?.playlistUri === active?.uri
+    ) {
+      setPlayerState({ ...playerStateVal, playing: false });
+      spotifyApi.pause();
+    } else {
+      spotifyApi.setAccessToken(accessToken);
+      spotifyApi.play({
+        context_uri: active?.uri,
+      });
+      console.log(active);
+      setPlayerState({
+        ...playerStateVal,
+        playing: true,
+        playingTrack: active?.tracks?.items?.[0]?.track,
+        playlistUri: active?.uri,
+      });
+    }
   };
 
   const playSong = (track) => {
+    console.log(track);
     if (playerStateVal.playingTrack === track) {
       if (!playerStateVal?.playing) {
         setPlayerState({
@@ -58,10 +58,15 @@ const PlaylistPlayer = () => {
           playingTrack: track,
           playing: true,
         });
+        spotifyApi.play();
       } else {
+        spotifyApi.pause();
         setPlayerState({ ...playerStateVal, playing: false });
       }
     } else {
+      spotifyApi.play({
+        uris: [track?.uri],
+      });
       setPlayerState({ ...playerStateVal, playing: true, playingTrack: track });
     }
   };
@@ -130,11 +135,19 @@ const PlaylistPlayer = () => {
       </div>
       <div className="body__songs">
         <div className="body__icons">
-          <PlayIcon
-            width="56"
-            height="56"
-            playPlaylist={() => playPlaylist()}
-          />
+          <span>
+            {playerStateVal?.playing &&
+            playerStateVal?.playlistUri === active?.uri ? (
+              <PauseIcon playPlaylist={() => playPlaylist()} />
+            ) : (
+              <PlayIcon
+                width="56"
+                height="56"
+                playPlaylist={() => playPlaylist()}
+              />
+            )}
+          </span>
+
           <MoreHorizOutlinedIcon className="more" />
         </div>
         <table className="songs">
@@ -158,7 +171,6 @@ const PlaylistPlayer = () => {
                 onMouseLeave={() => setShow()}
               >
                 <SongRow
-                  playSong={() => playSong(item.track)}
                   track={item.track}
                   index={index}
                   key={item?.id}

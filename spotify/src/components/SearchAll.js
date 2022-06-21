@@ -11,6 +11,7 @@ import PlayIcon from "./PlayIcon";
 import { playerState } from "../recoil/atoms/playerStateAtom";
 import { headerState } from "../recoil/atoms/headerStateAtom";
 import { Link } from "react-router-dom";
+import spotifyAPI from "../spotify";
 const SearchAll = () => {
   const ref = useRef();
 
@@ -64,7 +65,8 @@ const SearchAll = () => {
     setPlayerState({ ...playerStateVal, playingTrack: id });
   };
 
-  function chooseTrack(track) {
+  const playSong = (track) => {
+    console.log(track);
     if (playerStateVal.playingTrack === track) {
       if (!playerStateVal?.playing) {
         setPlayerState({
@@ -72,13 +74,18 @@ const SearchAll = () => {
           playingTrack: track,
           playing: true,
         });
+        spotifyAPI.play();
       } else {
+        spotifyAPI.pause();
         setPlayerState({ ...playerStateVal, playing: false });
       }
     } else {
+      spotifyAPI.play({
+        uris: [track?.uri],
+      });
       setPlayerState({ ...playerStateVal, playing: true, playingTrack: track });
     }
-  }
+  };
 
   const changeNavbarColor = () => {
     if (ref.current.scrollTop >= 80) {
@@ -200,7 +207,7 @@ const SearchAll = () => {
                 <TrackSearchResult
                   track={item}
                   key={item?.uri}
-                  chooseTrack={() => chooseTrack(item)}
+                  chooseTrack={() => playSong(item)}
                   index={index}
                 />
               ))}

@@ -5,7 +5,7 @@ import PauseIcon from "@mui/icons-material/Pause";
 import "../styles/SongRow.css";
 import { playerState } from "../recoil/atoms/playerStateAtom";
 
-function SongRow({ track, playSong, index, show, date }) {
+function SongRow({ track, index, show, date }) {
   const [playerStateVal, setPlayerState] = useRecoilState(playerState);
   function millisToMinutesAndSeconds(millis) {
     var minutes = Math.floor(millis / 60000);
@@ -46,7 +46,7 @@ function SongRow({ track, playSong, index, show, date }) {
       </td>
       <td className="song-album">{track?.album?.name}</td>
       <td className="song-date">
-        {/* {new Date(date)?.toISOString()?.split("T")[0]} */}
+        {new Date(date)?.toISOString()?.split("T")[0]}
       </td>
       <td className="song-time">
         {millisToMinutesAndSeconds(track?.duration_ms)}
