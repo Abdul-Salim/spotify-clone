@@ -29,7 +29,7 @@ function AuthLayout() {
       if (refreshToken) {
         if (new Date().getTime() >= expiresIn) {
           axios
-            .post("http://localhost:4000/refresh", {
+            .post(`${process.env.REACT_APP_API_URL}/refresh`, {
               refreshToken,
             })
             .then((res) => {
