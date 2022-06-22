@@ -35,11 +35,15 @@ const GetToken = () => {
     spotifyApi
       .authorizationCodeGrant(code)
       .then((data) => {
+        console.log(data);
         localStorage.setItem("refreshToken", data.body.refresh_token);
         localStorage.setItem("accessToken", data.body.access_token);
         const expires = new Date().getTime() + data.body.expires_in * 1000;
         localStorage.setItem("expiresIn", expires);
         spotifyApi.setAccessToken(data.body.access_token);
+        spotifyApi.setRefreshToken(data.body.refresh_token);
+        setToken(data.body.access_token);
+        navigate("/");
       })
       .catch((err) => {
         navigate("/auth");
