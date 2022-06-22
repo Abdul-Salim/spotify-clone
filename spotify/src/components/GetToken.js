@@ -15,31 +15,19 @@ const GetToken = () => {
 
   useEffect(() => {
     setLoading(true);
-    // axios
-    //   .post(`${process.env.REACT_APP_API_URL}/login`, {
-    //     code,
-    //   })
-    //   .then((res) => {
-    //     localStorage.setItem("refreshToken", res?.data?.refreshToken);
-    //     localStorage.setItem("accessToken", res?.data?.accessToken);
-    //     const expires = new Date().getTime() + res?.data?.expiresIn * 1000;
-    //     localStorage.setItem("expiresIn", expires);
-    //     spotifyApi.setAccessToken(res?.data?.accessToken);
-    //     spotifyApi.setRefreshToken(res?.data?.refreshToken);
-    //     setToken(res?.data?.accessToken);
-    //     navigate("/");
-    //   })
-    //   .catch((err) => {
-    //     navigate("/auth");
-    //   });
-    spotifyApi
-      .authorizationCodeGrant(code)
-      .then((data) => {
-        localStorage.setItem("refreshToken", data.body.refresh_token);
-        localStorage.setItem("accessToken", data.body.access_token);
-        const expires = new Date().getTime() + data.body.expires_in * 1000;
+    axios
+      .post(`${process.env.REACT_APP_API_URL}/login`, {
+        code,
+      })
+      .then((res) => {
+        localStorage.setItem("refreshToken", res?.data?.refreshToken);
+        localStorage.setItem("accessToken", res?.data?.accessToken);
+        const expires = new Date().getTime() + res?.data?.expiresIn * 1000;
         localStorage.setItem("expiresIn", expires);
-        spotifyApi.setAccessToken(data.body.access_token);
+        spotifyApi.setAccessToken(res?.data?.accessToken);
+        spotifyApi.setRefreshToken(res?.data?.refreshToken);
+        setToken(res?.data?.accessToken);
+        navigate("/");
       })
       .catch((err) => {
         navigate("/auth");
